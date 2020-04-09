@@ -4,13 +4,12 @@ package com.linkedin.learning;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
-import javax.swing.text.DateFormatter;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,11 +58,11 @@ public class AppTest {
     }
 
     @Test
-    public void scrollTest(){
+    public void scrollTest() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         driver.get("https://formy-project.herokuapp.com/scroll");
-        WebElement name  = driver.findElement(By.xpath("//input[@id='name']"));
+        WebElement name = driver.findElement(By.xpath("//input[@id='name']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(name);
         waitFor(3);
@@ -73,9 +72,78 @@ public class AppTest {
         driver.quit();
     }
 
-    private void waitFor(int seconds){
+    @Test
+    public void switchWindow() {
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://formy-project.herokuapp.com/switch-window");
+        driver.findElement(By.id("new-tab-button")).click();
+
+        String originalHandle = driver.getWindowHandle();
+        for (String handle : driver.getWindowHandles()) {
+            driver.switchTo().window(handle);
+        }
+        waitFor(2);
+        driver.close();
+        waitFor(2);
+        driver.switchTo().window(originalHandle);
+        driver.close();
+        waitFor(2);
+        driver.quit();
+    }
+
+    @Test
+    public void switchAlert() {
+        WebDriverManager.chromedriver().setup();
+
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://formy-project.herokuapp.com/switch-window");
+
+        WebElement alertButton = driver.findElement(By.id("alert-button"));
+        alertButton.click();
+        String originalHandle = driver.getWindowHandle();
+        waitFor(2);
+        driver.switchTo().alert().accept();
+        waitFor(2);
+        alertButton.click();
+        driver.quit();
+    }
+
+    @Test
+    public void executeJavaScript() {
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://formy-project.herokuapp.com/modal");
+
+        driver.findElement(By.id("modal-button")).click();
+        waitFor(2);
+        WebElement closeButton = driver.findElement(By.id("close-button"));
+//        closeButton.click();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", closeButton);
+        waitFor(2);
+
+        driver.quit();
+    }
+
+    @Test
+    public void dragAndDrop() {
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://formy-project.herokuapp.com/dragdrop");
+        WebElement image = driver.findElement(By.id("image"));
+        WebElement drop = driver.findElement(By.id("box"));
+
+        Actions actions = new Actions(driver);
+        actions.dragAndDrop(image,drop).build().perform();
+        waitFor(5);
+        driver.quit();
+    }
+
+    private void waitFor(int seconds) {
         try {
-            Thread.sleep(seconds*1000);
+            Thread.sleep(seconds * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
