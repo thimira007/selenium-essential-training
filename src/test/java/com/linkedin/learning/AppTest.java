@@ -2,17 +2,15 @@ package com.linkedin.learning;
 
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.CheckedInputStream;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
@@ -43,7 +41,7 @@ public class AppTest {
     public void autoCompleteTest() {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(5,  TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         driver.get("https://formy-project.herokuapp.com/autocomplete");
         WebElement address = driver.findElement(By.id("autocomplete"));
@@ -205,8 +203,8 @@ public class AppTest {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         driver.get("https://formy-project.herokuapp.com/dropdown");
-        selectFromDropDown(driver,"Checkbox");
-        selectFromDropDown(driver,"Modal");
+        selectFromDropDown(driver, "Checkbox");
+        selectFromDropDown(driver, "Modal");
         driver.quit();
     }
 
