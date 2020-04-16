@@ -1,4 +1,4 @@
-package com.linkedin.learning;
+package com.linkedin.learning.apptests;
 
 
 import io.github.bonigarcia.wdm.WebDriverManager;
